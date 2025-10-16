@@ -1,45 +1,42 @@
-# NVDLA Open Source Software
+# NVDLA Learning Notes
 
-## NVDLA
 
-The NVIDIA Deep Learning Accelerator (NVDLA) is a free and open architecture that promotes
-a standard way to design deep learning inference accelerators. With its modular architecture,
-NVDLA is scalable, highly configurable, and designed to simplify integration and portability.
-Learn more about NVDLA on the project web page.
 
-<http://nvdla.org/>
+### 参考：
 
-## Online Documentation
+- 官方网站：[NVIDIA Deep Learning Accelerator](https://nvdla.org/)
 
-You can find the latest NVDLA SW documentation [here](http://nvdla.org/sw/contents.html).
-This README file contains only basic information.
+- 官方软件文档：[Software Manual — NVDLA Documentation](https://nvdla.org/sw/contents.html)
 
-## Kernel Mode Driver
+- 官方 VP 和 Docker（虚拟测试平台）：[Virtual Platform — NVDLA Documentation](https://nvdla.org/vp.html)
 
-The kernel mode driver (KMD) is supported as a Linux out-of-tree kernel module.
-It has been verified with Linux 4.13.3 on ARM64 and is expected to work
-on other cpu architectures with little or no modification.
-The driver uses DRM and GEM PRIME for DMA buffer allocation and sharing.
+  
 
-### Building the Linux KMD
-    make KDIR=<path_to_Linux_source> ARCH=arm64 CROSS_COMPILE=<path_to_toolchain>
+- [zeasa](https://github.com/zeasa) 的参考笔记：[zeasa/nvdla-compiler](https://github.com/zeasa/nvdla-compiler)
 
-## User Mode Driver and test application
+- [LeiWang](https://github.com/LeiWang1999) 的参考笔记：[NVDLA Compiler Analysis](https://zhuanlan.zhihu.com/p/389736062)
 
-The user mode driver (UMD) includes runtime library. It provides interfaces to load
-network from loadable and submit it to NVDLA KMD. For reference, this package also
-includes test application demonstrating usage of runtime interfaces.
+- [LeiWang](https://github.com/LeiWang1999) 的参考笔记：[NVDLA Xilinx FPGA Mapping](https://zhuanlan.zhihu.com/p/378202360)
 
-### Building the Linux UMD and test application
-    export TOP=<path_to_umd>
-    make
 
-## Licensing
 
-NVDLA SW is released under the BSD 3-Clause license.
-An exception exists for the NVDLA SW Linux Kernel Mode Driver which is released
-under a GPLv2/BSD 3-Clause dual license.
-Each source and header file contains its license notice at the start of the file.
+- [NVDLA虚拟平台实战-CSDN](https://blog.csdn.net/lbai7134/article/details/122054812)
 
-NVDLA SW uses some external software components such as flatbuffers, half-precision library.
-License text for these softwares is included in COPYING file.
+- [nvdla整个build的flow_nvdla runtime-CSDN](https://blog.csdn.net/zhajio/article/details/84784336)
+
+- [NVDLA RunTime编译运行 note](https://note.youdao.com/ynoteshare/index.html?id=6a0fa4ab9a362cfdabc861ecadc0dd5a&type=note&_time=1640118848844)
+
+  
+
+### 源码版本：
+
+主仓库中有 `1.2.0` 和 `1.2.0_OC` 两个Release，而主分支 `master` 只是在OC基础上完善了校准表和一些平台相关的二进制文件。
+
+源码演化的时间线为： `1.2.0`  →  `1.2.0_OC` →  `master` 。
+
+在介绍中 `1.2.0_OC` 不支持预量化的 INT8 模型，需要使用 [TensorRT](https://github.com/nvdla/sw/blob/v1.2.0-OC/LowPrecision.md) 对FP32模型进行校准。也就是说这两个Release在使用流程上有一些区别。
+
+`1.2.0_OC` 功能支持一览：[CompilerFeatures.md](https://github.com/nvdla/sw/blob/master/CompilerFeatures.md)
+
+画了饼但是最终没完成的计划：[Roadmap.md](https://github.com/nvdla/sw/blob/master/Roadmap.md)  （当前不支持ONNX）
+
