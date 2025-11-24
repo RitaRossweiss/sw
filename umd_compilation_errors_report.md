@@ -119,17 +119,21 @@ $(MODULE_CPPOBJS): $(BUILDDIR)/%.o: %.cpp $(SRCDEPS)
 1. 在 `compile.mk` 中使用 `MODULE_CPP` 编译 C++ 文件
 2. 或者删除所有 `MODULE_CPP` 的定义，统一使用 `MODULE_CC`
 
-推荐方案1，修改 `umd/make/compile.mk:63`：
+推荐方案1，修改 `umd/make/compile.mk`：
+
+首先在第45行附近添加 MODULE_CPP 的目标特定变量设置：
+```makefile
+$(MODULE_OBJS): MODULE_CC:=$(MODULE_CC)
+$(MODULE_OBJS): MODULE_CPP:=$(MODULE_CPP)
+$(MODULE_OBJS): MODULE_OPTFLAGS:=$(MODULE_OPTFLAGS)
+```
+
+然后修改第63行的 C++ 编译规则：
 ```makefile
 $(MODULE_CPPOBJS): $(BUILDDIR)/%.o: %.cpp $(SRCDEPS)
 	@$(MKDIR)
 	@echo compiling $<
-	$(MODULE_CPP) $(MODULE_OPTFLAGS) $(MODULE_COMPILEFLAGS) $(MODULE_CPPFLAGS) ...
-```
-
-同时需要在 `compile.mk` 中添加：
-```makefile
-$(MODULE_OBJS): MODULE_CPP:=$(MODULE_CPP)
+	$(MODULE_CPP) $(MODULE_OPTFLAGS) $(MODULE_COMPILEFLAGS) $(MODULE_CPPFLAGS) $(MODULE_INCLUDES) $(INCLUDES) -c $< -MD -MT $@ -MF $(@:%o=%d) -o $@
 ```
 
 ---

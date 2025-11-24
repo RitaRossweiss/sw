@@ -119,17 +119,21 @@ Either:
 1. Use `MODULE_CPP` in `compile.mk` to compile C++ files
 2. Or remove all `MODULE_CPP` definitions and uniformly use `MODULE_CC`
 
-Recommended approach 1, modify `umd/make/compile.mk:63`:
+Recommended approach 1, modify `umd/make/compile.mk`:
+
+First, add MODULE_CPP target-specific variable setting near line 45:
+```makefile
+$(MODULE_OBJS): MODULE_CC:=$(MODULE_CC)
+$(MODULE_OBJS): MODULE_CPP:=$(MODULE_CPP)
+$(MODULE_OBJS): MODULE_OPTFLAGS:=$(MODULE_OPTFLAGS)
+```
+
+Then modify the C++ compilation rule at line 63:
 ```makefile
 $(MODULE_CPPOBJS): $(BUILDDIR)/%.o: %.cpp $(SRCDEPS)
 	@$(MKDIR)
 	@echo compiling $<
-	$(MODULE_CPP) $(MODULE_OPTFLAGS) $(MODULE_COMPILEFLAGS) $(MODULE_CPPFLAGS) ...
-```
-
-Also need to add in `compile.mk`:
-```makefile
-$(MODULE_OBJS): MODULE_CPP:=$(MODULE_CPP)
+	$(MODULE_CPP) $(MODULE_OPTFLAGS) $(MODULE_COMPILEFLAGS) $(MODULE_CPPFLAGS) $(MODULE_INCLUDES) $(INCLUDES) -c $< -MD -MT $@ -MF $(@:%o=%d) -o $@
 ```
 
 ---
