@@ -52,7 +52,10 @@ Unify the include order for both. Typically, `MODULE_INCLUDES` (module-specific 
 
 The C++ compilation rule should be changed to:
 ```makefile
-$(MODULE_CC) $(MODULE_OPTFLAGS) $(MODULE_COMPILEFLAGS) $(MODULE_CPPFLAGS) $(MODULE_INCLUDES) $(INCLUDES) -c $< ...
+$(MODULE_CPPOBJS): $(BUILDDIR)/%.o: %.cpp $(SRCDEPS)
+	@$(MKDIR)
+	@echo compiling $<
+	$(MODULE_CC) $(MODULE_OPTFLAGS) $(MODULE_COMPILEFLAGS) $(MODULE_CPPFLAGS) $(MODULE_INCLUDES) $(INCLUDES) -c $< -MD -MT $@ -MF $(@:%o=%d) -o $@
 ```
 
 ---
